@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <title>Contact Us</title>
     {% load static %}
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!--Font Awesome-->
     <script src="https://kit.fontawesome.com/c56d52b11f.js" crossorigin="anonymous"></script>
+    <!--Bootstrap-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -28,7 +30,7 @@
                     <a class="nav-link" href="{% url 'djangoapp:about' %}">About Us</a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="#">Contact Us</a>
+                    <a class="nav-link" href="#">Contact</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
@@ -46,8 +48,47 @@
             </form>
         </div>
     </nav>
-    <!-- Add reviews as cards -->
-    <h1>Contact Us</h1>
-
+    <!-- Contact Information -->
+    <div class="container-fluid" style="margin-top: 75px;">
+        <div class="card">
+            <h1 class="card-header">Contact Us</h5>
+            <div class="card-body">
+                <p class="lead">We read and respond to every customer inquiry. We really do want to hear from you!</p>
+                <address class="mb-0">
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <div class="d-flex flex-row">
+                                <div style="width: 30px"><b><i class="fas fa-phone-volume"></i></b></div>
+                                <div>(888) 888-8888</div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="d-flex flex-row">
+                                <div style="width: 30px"><b><i class="far fa-envelope"></i></b></div>
+                                <div>email@company.com</div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="d-flex flex-row">
+                                <div style="width: 30px"><b><i class="far fa-clock"></i></b></div>
+                                <div>9am-4pm, Monday-Friday</div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="d-flex flex-row">
+                                <div style="width: 30px"><b><i class="fas fa-map-marker-alt"></i></b></div>
+                                <div>Address of company</div>
+                            </div>
+                        </li>
+                    </ul>
+                </address>
+            </div>
+            <div class="mx-5">
+                <div class="embed-responsive embed-responsive-21by9">
+                    <iframe class="embed-responsive-item" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12743537.508178987!2d26.188645651199906!3d38.758767628652194!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14b0155c964f2671%3A0x40d9dbd42a625f2a!2zVMO8cmtpeWU!5e0!3m2!1str!2str!4v1618709247021!5m2!1str!2str" loading="lazy"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
