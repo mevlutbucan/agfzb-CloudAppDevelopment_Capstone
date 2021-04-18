@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>About Us</title>
+    <title>Dealership Review - About Us</title>
     {% load static %}
     <!--Font Awesome-->
     <script src="https://kit.fontawesome.com/c56d52b11f.js" crossorigin="anonymous"></script>
@@ -14,7 +14,7 @@
 </head>
 
 <body>
-    <!--Add a nav bar here -->
+    <!-- Add a nav bar here -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <a class="navbar-brand" href="{% url 'djangoapp:index' %}"><i class="fas fa-car"></i></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -32,20 +32,23 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'djangoapp:contact' %}">Contact</a>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
-                </li>
             </ul>
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
+            {% if user.is_authenticated %}
+            <div class="navbar-nav flex-row justify-content-end">
+                    <span class="nav-item nav-link my-2 my-lg-0 mr-sm-2 user-select-none">{{ user.first_name }} ({{ user.username }})</span>
+                    <a class="btn btn-outline-light my-2 my-lg-0" href="{% url 'djangoapp:logout' %}">Logout</a>
+            </div>
+            {% else %}
+            <div class="navbar-nav flex-row justify-content-between">
+                <form class="form-inline my-2 my-lg-0" action="{% url 'djangoapp:login' %}" method="POST">
+                    {% csrf_token %}
+                    <input class="form-control mr-sm-2" type="text" placeholder="Username" name="username" >
+                    <input class="form-control mr-sm-2" type="password" placeholder="Password" name="password" >
+                    <button class="btn btn-primary mr-sm-2" type="submit">Login</button>
+                </form>
+                <a class="btn btn-outline-light my-2 my-lg-0" href="{% url 'djangoapp:registration' %}">Sign Up</a>
+            </div>
+            {% endif %}
         </div>
     </nav>
     <!-- Information -->
