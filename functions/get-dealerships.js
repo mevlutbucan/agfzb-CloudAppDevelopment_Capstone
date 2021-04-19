@@ -4,7 +4,7 @@
  **/
 async function main(params) {
     const cloudantOrError = getCloudantAccount(params);
-    if (typeof cloudantOrError === 'string') return Promise.reject(cloudantOrError);
+    if (typeof cloudantOrError === 'string') return Promise.reject({ error: cloudantOrError });
     const cloudantDb = cloudantOrError.db.use('dealerships');
     const list = await cloudantDb.list({ include_docs: true });
     const filteredList = getFilteredList(list, params);
