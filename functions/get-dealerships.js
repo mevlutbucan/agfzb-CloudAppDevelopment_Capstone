@@ -1,20 +1,36 @@
 /**
- * ### Description
  * Get all documents in Cloudant database:
  * https://docs.couchdb.org/en/stable/api/database/bulk-api.html#db-all-docs
- * 
- * ### Parameters
- * - **_dbName_** (string): `Required`
- * - **_params_** (json): `Optional`
- *  - **_include_docs_** (boolean): Include the full content of the design documents in the return. Default is `false`.
- *  - **_limit_** (number): Limit the number of the returned design documents to the specified number. `Optional`
  **/
 async function main(params) {
-    const cloudant = getCloudantAccount(params);
-    const cloudantDb = cloudant.db.use('dealerships');
-    const list = await cloudantDb.list({ include_docs: true })
+    const cloudantOrError = getCloudantAccount(params);
+    if (typeof cloudantOrError === 'string') return Promise.reject(cloudantOrError);
+    const cloudantDb = cloudantOrError.db.use('dealerships');
+    const list = await cloudantDb.list({ include_docs: true });
+    const filteredList = getFilteredList(list, params);
+    return getFormattedList(filteredList);
+}
+
+function getCloudantAccount(params) {
+    if (!params.host) return 'host parameter is required.';
+    if (!params.iamApiKey) return 'iamApiKey parameter is required.';
+    if (!params.iamUrl) return 'iamUrl parameter is required.';
+    const Cloudant = require('@cloudant/cloudant');
+    return new Cloudant({
+        url: `https://${params.host}`,
+        plugins: { iamauth: { iamApiKey: params.iamApiKey, iamTokenUrl: params.iamUrl }}
+    });
+}
+
+function getFilteredList(list, params) {
+    if (params.state === undefined) return list.rows;
+    if (typeof params.state === 'string')
+        return list.rows.filter(row => row.doc.st === params.state);
+}
+
+function getFormattedList(rows) {
     return {
-        entries: list.rows.map((row) => {
+        entries: rows.map((row) => {
             return {
                 id: row.doc.id,
                 city: row.doc.city,
@@ -27,15 +43,4 @@ async function main(params) {
             }
         })
     };
-}
-
-function getCloudantAccount(params) {
-    if (!params.host) return Promise.reject('host parameter is required.');
-    if (!params.iamApiKey) return Promise.reject('iamApiKey parameter is required.');
-    if (!params.iamUrl) return Promise.reject('iamUrl parameter is required.');
-    const Cloudant = require('@cloudant/cloudant');
-    return new Cloudant({
-        url: `https://${params.host}`,
-        plugins: { iamauth: { iamApiKey: params.iamApiKey, iamTokenUrl: params.iamUrl }}
-    });
 }
