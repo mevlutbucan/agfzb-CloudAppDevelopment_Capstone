@@ -1,25 +1,22 @@
 /**
+ * ### Description
  * Get all documents in Cloudant database:
- * https://docs.cloudant.com/database.html#get-documents
+ * https://docs.couchdb.org/en/stable/api/database/bulk-api.html#db-all-docs
+ * 
+ * ### Parameters
+ * - **_dbName_** (string): `Required`
+ * - **_params_** (json): `Optional`
+ *  - **_include_docs_** (boolean): Include the full content of the design documents in the return. Default is `false`.
+ *  - **_limit_** (number): Limit the number of the returned design documents to the specified number. `Optional`
  **/
-
 function main(message) {
+    if (!message.host) return Promise.reject('host parameter is required.');
+    if (!message.iamApiKey) return Promise.reject('iamApiKey parameter is required.');
+    if (!message.iamUrl) return Promise.reject('iamUrl parameter is required.');
     const cloudant = getCloudantAccount(message);
-    if (!message.dbName) {
-        return Promise.reject('dbname is required.');
-    }
+    if (!message.dbName) return Promise.reject('dbName parameter is required.');
     const cloudantDb = cloudant.db.use(message.dbName);
-    let params = {};
-    if (typeof message.params === 'object') {
-        params = message.params;
-    } else if (typeof message.params === 'string') {
-        try {
-            params = JSON.parse(message.params);
-        } catch (e) {
-            return Promise.reject('params field cannot be parsed. Ensure it is valid JSON.');
-        }
-    }
-    return listAllDocuments(cloudantDb, params);
+    return listAllDocuments(cloudantDb, message.params);
 }
 
 /**
