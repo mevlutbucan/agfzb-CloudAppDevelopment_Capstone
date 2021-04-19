@@ -50,7 +50,7 @@ def logout_request(request):
     print("Log out the user `{}`".format(request.user.username))
     # Logout user in the request
     logout(request)
-    # Redirect user back to course list view
+    # Redirect user back to previous view
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 # Create a `registration_request` view to handle sign up request
@@ -81,7 +81,7 @@ def registration_request(request):
                                             first_name=first_name,
                                             last_name=last_name,
                                             password=password)
-            # Login the user and redirect to course list page
+            # Login the user and redirect to index page
             login(request, user)
             return redirect("djangoapp:index")
         else:
@@ -91,6 +91,8 @@ def registration_request(request):
 def get_dealerships(request):
     context = {}
     if request.method == "GET":
+        # dealerships = get_dealerships_from_cf("URL")
+        # context['dealerships'] = dealerships
         return render(request, 'djangoapp/index.html', context)
 
 
