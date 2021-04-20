@@ -6,13 +6,19 @@ import sys
 from cloudant.client import Cloudant
 
 def main(params):
-    cloudant = get_cloudant_account(params)
-    cloudant_db = cloudant['dealership-reviews']
+    cloudant_or_error = get_cloudant_account(params)
+    if type(cloudant_or_error) == str:
+        return { "error": cloudant_or_error }
+    cloudant_db = cloudant_or_error['dealership-reviews']
     filtered_list = get_filtered_list(cloudant_db, params)
     formatted_list = get_formatted_list(filtered_list)
     return { "entries": formatted_list }
 
 def get_cloudant_account(params):
+    if not 'api_username' in params:
+        return "api_username parameter is required."
+    if not 'api_key' in params:
+        return "api_key parameter is required."
     return Cloudant.iam(params['api_username'], params['api_key'], connect=True)
 
 def get_filtered_list(db, params):
