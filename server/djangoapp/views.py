@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 # from .models import related models
-# from .restapis import related methods
+from .restapis import get_dealerships_from_cloudant
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
@@ -19,19 +19,16 @@ logger = logging.getLogger(__name__)
 
 # Create an `about` view to render a static about page
 def about(request):
-    context = {}
     if request.method == "GET":
-        return render(request, 'djangoapp/about.html', context)
+        return render(request, 'djangoapp/about.html')
 
 # Create a `contact` view to return a static contact page
 def contact(request):
-    context = {}
     if request.method == "GET":
-        return render(request, 'djangoapp/contact.html', context)
+        return render(request, 'djangoapp/contact.html')
 
 # Create a `login_request` view to handle sign in request
 def login_request(request):
-    context = {}
     # Handles POST request
     if request.method == "POST":
         # Get username and password from request.POST dictionary
@@ -55,10 +52,9 @@ def logout_request(request):
 
 # Create a `registration_request` view to handle sign up request
 def registration_request(request):
-    context = {}
     # If it is a GET request, just render the registration page
     if request.method == 'GET':
-        return render(request, 'djangoapp/registration.html', context)
+        return render(request, 'djangoapp/registration.html')
     # If it is a POST request
     elif request.method == 'POST':
         # Get user information from request.POST
@@ -85,15 +81,20 @@ def registration_request(request):
             login(request, user)
             return redirect("djangoapp:index")
         else:
-            return render(request, 'djangoapp/registration.html', context)
+            return render(request, 'djangoapp/registration.html')
 
 # Update the `get_dealerships` view to render the index page with a list of dealerships
 def get_dealerships(request):
     context = {}
     if request.method == "GET":
-        # dealerships = get_dealerships_from_cf("URL")
+        API_URL = "https://service.eu.apiconnect.ibmcloud.com/gws/apigateway/api/949f20dc522c93ee49c129709667f19bb65ab6298b4763844d288912d7226ca2/capstone-project-fn/dealership"
+        dealerships = get_dealerships_from_cloudant(API_URL)
+        # Concat all dealer's short name
+        dealer_names = ' '.join([dealer.city for dealer in dealerships])
+        # Return a list of dealer short name
+        return HttpResponse(dealer_names)
         # context['dealerships'] = dealerships
-        return render(request, 'djangoapp/index.html', context)
+        # return render(request, 'djangoapp/index.html', context)
 
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
