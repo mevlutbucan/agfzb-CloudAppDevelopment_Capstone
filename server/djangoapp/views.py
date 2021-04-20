@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 # from .models import related models
-from .restapis import get_dealerships_from_cloudant
+from .restapis import get_dealerships_from_cloudant, get_dealer_reviews_from_cloudant
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
@@ -29,55 +29,39 @@ def contact(request):
 
 # Create a `login_request` view to handle sign in request
 def login_request(request):
-    # Handles POST request
     if request.method == "POST":
-        # Get username and password from request.POST dictionary
         username = request.POST['username']
         password = request.POST['password']
-        # Try to check if provide credential can be authenticated
         user = authenticate(username=username, password=password)
         if user is not None:
-            # If user is valid, call login method to login current user
             login(request, user)
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 # Create a `logout_request` view to handle sign out request
 def logout_request(request):
-    # Get the user object based on session id in request
-    print("Log out the user `{}`".format(request.user.username))
-    # Logout user in the request
     logout(request)
-    # Redirect user back to previous view
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 # Create a `registration_request` view to handle sign up request
 def registration_request(request):
-    # If it is a GET request, just render the registration page
     if request.method == 'GET':
         return render(request, 'djangoapp/registration.html')
-    # If it is a POST request
     elif request.method == 'POST':
-        # Get user information from request.POST
         username = request.POST['username']
         password = request.POST['password']
         first_name = request.POST['firstname']
         last_name = request.POST['lastname']
         user_exist = False
         try:
-            # Check if user already exists
             User.objects.get(username=username)
             user_exist = True
         except:
-            # If not, simply log this is a new user
             logger.debug("{} is new user".format(username))
-        # If it is a new user
         if not user_exist:
-            # Create user in auth_user table
             user = User.objects.create_user(username=username,
                                             first_name=first_name,
                                             last_name=last_name,
                                             password=password)
-            # Login the user and redirect to index page
             login(request, user)
             return redirect("djangoapp:index")
         else:
@@ -87,19 +71,20 @@ def registration_request(request):
 def get_dealerships(request):
     context = {}
     if request.method == "GET":
-        API_URL = "https://service.eu.apiconnect.ibmcloud.com/gws/apigateway/api/949f20dc522c93ee49c129709667f19bb65ab6298b4763844d288912d7226ca2/capstone-project-fn/dealership"
-        dealerships = get_dealerships_from_cloudant(API_URL)
-        # Concat all dealer's short name
-        dealer_names = ' '.join([dealer.city for dealer in dealerships])
-        # Return a list of dealer short name
+        dealerships = get_dealerships_from_cloudant()
+        dealer_names = '<div></div>'.join([dealer.full_name for dealer in dealerships])
         return HttpResponse(dealer_names)
         # context['dealerships'] = dealerships
         # return render(request, 'djangoapp/index.html', context)
 
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
-# def get_dealer_details(request, dealer_id):
-# ...
+def get_dealer_reviews(request, dealer_id):
+    context = {}
+    if request.method == "GET":
+        dealer_reviews = get_dealer_reviews_from_cloudant(dealer_id)
+        reviews = ' '.join([review.review for review in dealer_reviews])
+        return HttpResponse(reviews)
 
 # Create a `add_review` view to submit a review
 # def add_review(request, dealer_id):
