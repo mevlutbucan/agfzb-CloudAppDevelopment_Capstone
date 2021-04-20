@@ -3,7 +3,6 @@
 # https://docs.couchdb.org/en/stable/api/database/bulk-api.html#db-all-docs
 #
 import sys
-from cloudant.client import Cloudant
 
 def main(params):
     cloudant_or_error = get_cloudant_account(params)

@@ -3,7 +3,6 @@
 # https://docs.couchdb.org/en/stable/api/database/bulk-api.html#db-all-docs
 #
 import sys
-from cloudant.client import Cloudant
 
 def main(params):
     cloudant_or_error = get_cloudant_account(params)
@@ -19,6 +18,7 @@ def get_cloudant_account(params):
         return "api_username parameter is required."
     if not 'api_key' in params:
         return "api_key parameter is required."
+    from cloudant.client import Cloudant
     return Cloudant.iam(params['api_username'], params['api_key'], connect=True)
 
 def get_filtered_list(db, params):
