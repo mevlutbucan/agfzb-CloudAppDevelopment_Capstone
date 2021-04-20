@@ -32,14 +32,16 @@ function getFormattedList(rows) {
     return {
         entries: rows.map((row) => {
             return {
-                id: row.doc.id,
-                city: row.doc.city,
-                state: row.doc.state,
-                st: row.doc.st,
-                address: row.doc.address,
-                zip: row.doc.zip,
-                lat: row.doc.lat,
-                long: row.doc.long
+                "id": row.doc.id,
+                "city": row.doc.city,
+                "state": row.doc.state,
+                "st": row.doc.st,
+                "address": row.doc.address,
+                "zip": row.doc.zip,
+                "lat": row.doc.lat,
+                "long": row.doc.long,
+                "short_name": row.doc.short_name,
+                "full_name": row.doc.full_name
             }
         })
     };
