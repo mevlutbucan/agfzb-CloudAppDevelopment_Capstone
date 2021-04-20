@@ -12,8 +12,13 @@ def get_request(url, **kwargs):
     return json_data
 
 # Create a `post_request` to make HTTP POST requests
-# e.g., response = requests.post(url, params=kwargs, json=payload)
-# def post_request():
+def post_request(url, json_payload, **kwargs):
+    try:
+        response = requests.post(url, json=json_payload, params=kwargs)
+    except:
+        print("Network exception occurred")
+    json_data = json.loads(response.text)
+    return json_data
 
 # Create a get_dealers_from_cf method to get dealers from a cloud function
 def get_dealerships_from_cloudant(**kwargs):
@@ -58,6 +63,21 @@ def get_dealer_reviews_from_cloudant(dealerId):
             results.append(dealer_review)
     return results
 
+def add_dealer_review_to_cloudant(review_post):
+    API_URL = "https://service.eu.apiconnect.ibmcloud.com/gws/apigateway/api/949f20dc522c93ee49c129709667f19bb65ab6298b4763844d288912d7226ca2/capstone-project-fn/review"
+    review = {
+        "id": review_post['review_id'],
+        "name": review_post['review_name'],
+        "dealership": review_post['dealership'],
+        "review": review_post['review'],
+        "purchase": review_post['purchase'],
+        "purchase_date": review_post['purchase_date'],
+        "car_make": review_post['car_make'],
+        "car_model": review_post['car_model'],
+        "car_year": review_post['car_year']
+    }
+    return post_request(API_URL, review)
+
 # Create an `analyze_review_sentiments` method to call Watson NLU and analyze text
 def analyze_review_sentiments(text):
     API_URL = "https://service.eu.apiconnect.ibmcloud.com/gws/apigateway/api/949f20dc522c93ee49c129709667f19bb65ab6298b4763844d288912d7226ca2/capstone-project-fn/analyze/sentiment"
@@ -65,9 +85,3 @@ def analyze_review_sentiments(text):
     json_result = get_request(API_URL, text=text)
     if json_result:
         return json_result["label"]
-
-# - Call get_request() with specified arguments
-# - Get the returned sentiment label such as Positive or Negative
-
-
-

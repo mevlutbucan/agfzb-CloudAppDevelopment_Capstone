@@ -1,8 +1,6 @@
 from django.db import models
 from django.utils.timezone import now
 
-# Create your models here.
-
 # Create a Car Make model `class CarMake(models.Model)`:
 class CarMake(models.Model):
     carmake_id = models.SmallAutoField(primary_key=True)
@@ -13,14 +11,10 @@ class CarMake(models.Model):
 
 # Create a Car Model model `class CarModel(models.Model):`:
 class CarModel(models.Model):
-    carmodel_id = models.SmallAutoField(primary_key=True)
-    name = models.CharField(max_length=50, blank=False)
-    carmake = models.ForeignKey(CarMake, on_delete=models.CASCADE)
-    dealer_id = models.IntegerField(null=False)
-    
     YEAR_CHOICES = []
     for r in range((now().year), 1979, -1):
         YEAR_CHOICES.append((r,r))
+    # TYPES
     SEDAN = 'sedan'
     COUPE = 'coupe'
     SUV = 'suv'
@@ -43,7 +37,10 @@ class CarModel(models.Model):
         (HYBRID, 'Hybrid/Electric'),
         (DIESEL, 'Diesel'),
     ]
-
+    carmodel_id = models.SmallAutoField(primary_key=True)
+    name = models.CharField(max_length=50, blank=False)
+    carmake = models.ForeignKey(CarMake, on_delete=models.CASCADE)
+    dealer_id = models.IntegerField(null=False)
     year = models.IntegerField(choices=YEAR_CHOICES, default=now().year)
     type = models.CharField(
         null=False,
@@ -67,7 +64,6 @@ class CarDealer:
         self.long = long
         self.short_name = short_name
         self.full_name = full_name
-
     def __str__(self):
         return "Dealer: " + self.full_name
 
@@ -85,6 +81,5 @@ class DealerReview:
         self.car_model = car_model
         self.car_year = car_year
         self.sentiment = sentiment
-
     def __str__(self):
         return "Review: " + self.review
