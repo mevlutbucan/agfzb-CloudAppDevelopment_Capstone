@@ -13,7 +13,7 @@ class CarMake(models.Model):
     name = models.CharField(max_length=50, unique=True, blank=False)
     description = models.TextField(blank=True)
     def __str__(self):
-        return "Car Make: " + self.name
+        return self.name
 
 # <HINT> Create a Car Model model `class CarModel(models.Model):`:
 # - Many-To-One relationship to Car Make model (One Car Make has many Car Models, using ForeignKey field)
@@ -28,8 +28,10 @@ class CarModel(models.Model):
     name = models.CharField(max_length=50, blank=False)
     carmake = models.ForeignKey(CarMake, on_delete=models.CASCADE)
     dealer_id = models.IntegerField(null=False)
-    year = models.DateField(blank=False)
-
+    
+    YEAR_CHOICES = []
+    for r in range((now().year), 1979, -1):
+        YEAR_CHOICES.append((r,r))
     SEDAN = 'sedan'
     COUPE = 'coupe'
     SUV = 'suv'
@@ -40,7 +42,7 @@ class CarModel(models.Model):
     LUX = 'luxury_car'
     HYBRID = 'hybrid_electric'
     DIESEL = 'diesel'
-    TYPES = [
+    TYPE_CHOICES = [
         (SEDAN, 'Sedan'),
         (COUPE, 'Coupe'),
         (SUV, 'SUV'),
@@ -52,15 +54,16 @@ class CarModel(models.Model):
         (HYBRID, 'Hybrid/Electric'),
         (DIESEL, 'Diesel'),
     ]
+
+    year = models.IntegerField(choices=YEAR_CHOICES, default=now().year)
     type = models.CharField(
         null=False,
         max_length=20,
-        choices=TYPES,
+        choices=TYPE_CHOICES,
         default=SEDAN
     )
     def __str__(self):
-        return "Car Make: " + self.carmake.name + ", " + \
-               "Car Model: " + self.name
+        return self.carmake.name + " " + self.name
 
 # <HINT> Create a plain Python class `CarDealer` to hold dealer data
 
