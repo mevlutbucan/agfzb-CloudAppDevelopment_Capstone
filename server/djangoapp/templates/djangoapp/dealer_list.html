@@ -1,0 +1,24 @@
+<table data-toggle="table" data-filter-control="true" class="table table-striped table-bordered table-hover">
+    <thead>
+        <tr>
+            <th data-field="id">#</th>
+            <th data-field="name">Dealer Name</th>
+            <th data-field="city">City</th>
+            <th data-field="address">Address</th>
+            <th data-field="zip">Zip</th>        
+            <th data-field="state" data-filter-control="select">State</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for dealer in dealer_list %}
+        <tr>
+            <td>{{ dealer.id }}</td>
+            <td><a href="{% url 'djangoapp:dealer_review' dealer.id %}">{{ dealer.full_name }}</a></td>        
+            <td>{{ dealer.city }}</td>
+            <td>{{ dealer.address}}</td>               
+            <td>{{ dealer.zip}}</td>
+            <td>{{ dealer.state }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
