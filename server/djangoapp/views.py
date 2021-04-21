@@ -67,10 +67,8 @@ def get_dealerships(request):
     context = {}
     if request.method == "GET":
         dealerships = get_dealerships_from_cloudant()
-        dealer_names = '<div></div>'.join([dealer.full_name for dealer in dealerships])
-        return HttpResponse(dealer_names)
-        # context['dealerships'] = dealerships
-        # return render(request, 'djangoapp/index.html', context)
+        context['dealerships'] = dealerships
+        return render(request, 'djangoapp/index.html', context)
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
 def get_dealer_reviews(request, dealer_id):
