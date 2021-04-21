@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <!--Font Awesome-->
+    <script src="https://kit.fontawesome.com/c56d52b11f.js" crossorigin="anonymous"></script>
+    <!--Bootstrap-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    {% block head %}
+    {% endblock %}
+</head>
+
+<body>
+    <!-- HEADER -->
+    <header class="bg-dark fixed-top">
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <a class="navbar-brand" href="{% url 'djangoapp:index' %}"><i class="fas fa-car"></i></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    {% url 'djangoapp:index' as url %}
+                    <li class="nav-item {% if request.path == url %}active{% endif %}">
+                        <a class="nav-link" href="{{ url }}">Home</a>
+                    </li>
+                    {% url 'djangoapp:about' as url %}
+                    <li class="nav-item {% if request.path == url %}active{% endif %}">
+                        <a class="nav-link" href="{{ url }}">About Us</a>
+                    </li>
+                    {% url 'djangoapp:contact' as url %}
+                    <li class="nav-item {% if request.path == url %}active{% endif %}">
+                        <a class="nav-link" href="{{ url }}">Contact</a>
+                    </li>
+                </ul>
+                {% if user.is_authenticated %}
+                <div class="navbar-nav flex-row justify-content-end">
+                        <span class="nav-item nav-link my-2 my-lg-0 mr-sm-2 user-select-none">{{ user.first_name }} ({{ user.username }})</span>
+                        <a class="btn btn-outline-light my-2 my-lg-0" href="{% url 'djangoapp:logout' %}">Logout</a>
+                </div>
+                {% else %}
+                <div class="navbar-nav flex-row justify-content-between">
+                    <form class="form-inline my-2 my-lg-0" action="{% url 'djangoapp:login' %}" method="POST">
+                        {% csrf_token %}
+                        <input class="form-control mr-sm-2" type="text" placeholder="Username" name="username" >
+                        <input class="form-control mr-sm-2" type="password" placeholder="Password" name="password" >
+                        <button class="btn btn-primary mr-sm-2" type="submit">Login</button>
+                    </form>
+                    <a class="btn btn-outline-light my-2 my-lg-0" href="{% url 'djangoapp:registration' %}">Sign Up</a>
+                </div>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+    <!-- CONTENT -->
+    <main class="container-fluid" style="margin-top: 75px;">
+        <div class="card">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </main>
+    <!-- FOOTER -->
+    <footer>
+    </footer>
+    <!--Bootstrap-->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
+    {% block script %}
+    {% endblock %}
+</body>
+</html>
