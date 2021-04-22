@@ -8,6 +8,7 @@ from .restapis import get_dealerships_from_cloudant, \
                       get_dealer_reviews_from_cloudant, \
                       add_dealer_review_to_cloudant
 from .models import CarModel
+import random
 import logging
 
 # Get an instance of a logger
@@ -87,6 +88,20 @@ def add_dealer_review(request, dealer_id, dealer_name):
         cars = CarModel.objects.filter(dealer_id=dealer_id)
         context = { "cars": cars, "dealer_id": dealer_id, "dealer_name": dealer_name }
         return render(request, 'djangoapp/add_review.html', context)
-    if request.method == "POST" and request.user.is_authenticated():
-        add_dealer_review_to_cloudant(request.POST)
-    return redirect('djangoapp:about')
+    if request.method == "POST" and request.user.is_authenticated:
+        form = request.POST
+        review = {
+            "review_id": random.randint(0, 100),
+            "reviewer_name": form["fullname"],
+            "dealership": dealer_id,
+            "review": form["review"]
+        }
+        if form.get("purchase"):
+            review["purchase"] = True
+            review["purchase_date"] = form["purchasedate"]
+            car = get_object_or_404(CarModel, pk=form["car"])
+            review["car_make"] = car.carmake.name
+            review["car_model"] = car.name
+            review["car_year"]= car.year
+        json_result = add_dealer_review_to_cloudant(review)
+        return redirect('djangoapp:dealer_reviews', dealer_id=dealer_id, dealer_name=dealer_name)

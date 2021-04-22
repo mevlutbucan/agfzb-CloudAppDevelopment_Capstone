@@ -70,14 +70,14 @@ def get_dealer_reviews_from_cloudant(dealerId):
 def add_dealer_review_to_cloudant(review_post):
     review = {
         "id": review_post['review_id'],
-        "name": review_post['review_name'],
+        "name": review_post['reviewer_name'],
         "dealership": review_post['dealership'],
         "review": review_post['review'],
-        "purchase": review_post['purchase'],
-        "purchase_date": review_post['purchase_date'],
-        "car_make": review_post['car_make'],
-        "car_model": review_post['car_model'],
-        "car_year": review_post['car_year']
+        "purchase": review_post.get('purchase', False),
+        "purchase_date": review_post.get('purchase_date'),
+        "car_make": review_post.get('car_make'),
+        "car_model": review_post.get('car_model'),
+        "car_year": review_post.get('car_year')
     }
     return post_request(API_URL_REVIEW, review)
 
