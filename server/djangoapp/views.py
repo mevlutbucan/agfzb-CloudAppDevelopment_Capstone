@@ -64,19 +64,20 @@ def registration_request(request):
 
 # Update the `get_dealerships` view to render the index page with a list of dealerships
 def get_dealerships(request):
-    context = {}
     if request.method == "GET":
         dealerships = get_dealerships_from_cloudant()
-        context['dealerships'] = dealerships
+        context = { "dealerships": dealerships }
         return render(request, 'djangoapp/index.html', context)
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
-def get_dealer_reviews(request, dealer_id):
-    context = {}
+def get_dealer_reviews(request, dealer_id, dealer_name):
     if request.method == "GET":
         dealer_reviews = get_dealer_reviews_from_cloudant(dealer_id)
-        reviews = ' '.join([review.review for review in dealer_reviews])
-        return HttpResponse(reviews)
+        context = {
+            "dealer_name": dealer_name,
+            "reviews": dealer_reviews
+        }
+        return render(request, 'djangoapp/dealer_reviews.html', context)
 
 # Create a `add_review` view to submit a review
 def add_dealer_review(request):

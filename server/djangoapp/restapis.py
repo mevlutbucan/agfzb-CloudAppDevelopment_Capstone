@@ -3,9 +3,10 @@ import requests
 import json
 from .models import CarDealer, DealerReview
 
-API_URL_DEALERSHIP = os.environ.get('COURSERA_CF_API_URL') + '/api/dealership'
-API_URL_REVIEW = os.environ.get('COURSERA_CF_API_URL') + '/api/review'
-API_URL_SENTIMENT = os.environ.get('COURSERA_CF_API_URL') + '/api/sentiment'
+API_URL = os.environ.get('COURSERA_CF_API_URL')
+API_URL_DEALERSHIP = API_URL + '/api/dealership'
+API_URL_REVIEW = API_URL + '/api/review'
+API_URL_SENTIMENT = API_URL + '/api/sentiment'
 
 # Create a `get_request` to make HTTP GET requests
 def get_request(url, **kwargs):
@@ -85,4 +86,4 @@ def analyze_review_sentiments(text):
     results = []
     json_result = get_request(API_URL_SENTIMENT, text=text)
     if json_result:
-        return json_result["label"]
+        return json_result.get('label', 'neutral')
