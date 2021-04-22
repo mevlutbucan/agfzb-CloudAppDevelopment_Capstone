@@ -25,7 +25,7 @@ def get_filtered_list(db, params):
     filtered_list = []
     if 'dealerId' in params:
         for document in db:
-            if str(document['id']) == params['dealerId']:
+            if str(document['dealership']) == params['dealerId']:
                 filtered_list.append(document)
     else:
         for document in db:
@@ -41,9 +41,9 @@ def get_formatted_list(filtered_list):
             "dealership": document['dealership'],
             "review": document['review'],
             "purchase": document['purchase'],
-            "purchase_date": document['purchase_date'] if 'purchase_date' in document else None,
-            "car_make": document['car_make'] if 'car_make' in document else None,
-            "car_model": document['car_model'] if 'car_model' in document else None,
-            "car_year": document['car_year'] if 'car_year' in document else None
+            "purchase_date": document.get('purchase_date'),
+            "car_make": document.get('car_make'),
+            "car_model": document.get('car_model'),
+            "car_year": document.get('car_year')
         })
     return formatted_list
