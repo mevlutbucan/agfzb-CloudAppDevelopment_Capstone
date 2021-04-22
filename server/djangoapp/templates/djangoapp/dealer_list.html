@@ -13,7 +13,7 @@
         {% for dealer in dealer_list %}
         <tr>
             <td>{{ dealer.id }}</td>
-            <td><a href="{% url 'djangoapp:dealer_review' dealer.id dealer.full_name %}">{{ dealer.full_name }}</a></td>        
+            <td><a href="{% url 'djangoapp:dealer_reviews' dealer.id dealer.full_name %}">{{ dealer.full_name }}</a></td>        
             <td>{{ dealer.city }}</td>
             <td>{{ dealer.address}}</td>               
             <td>{{ dealer.zip}}</td>

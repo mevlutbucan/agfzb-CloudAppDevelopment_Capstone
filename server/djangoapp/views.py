@@ -7,6 +7,7 @@ from datetime import datetime
 from .restapis import get_dealerships_from_cloudant, \
                       get_dealer_reviews_from_cloudant, \
                       add_dealer_review_to_cloudant
+from .models import CarModel
 import logging
 
 # Get an instance of a logger
@@ -74,14 +75,18 @@ def get_dealer_reviews(request, dealer_id, dealer_name):
     if request.method == "GET":
         dealer_reviews = get_dealer_reviews_from_cloudant(dealer_id)
         context = {
+            "dealer_id": dealer_id,
             "dealer_name": dealer_name,
             "reviews": dealer_reviews
         }
         return render(request, 'djangoapp/dealer_reviews.html', context)
 
 # Create a `add_review` view to submit a review
-def add_dealer_review(request):
-    context = {}
+def add_dealer_review(request, dealer_id, dealer_name):
+    if request.method == "GET":
+        cars = CarModel.objects.filter(dealer_id=dealer_id)
+        context = { "cars": cars, "dealer_id": dealer_id, "dealer_name": dealer_name }
+        return render(request, 'djangoapp/add_review.html', context)
     if request.method == "POST" and request.user.is_authenticated():
         add_dealer_review_to_cloudant(request.POST)
     return redirect('djangoapp:about')
